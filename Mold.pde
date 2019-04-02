@@ -4,8 +4,8 @@ int DIM = 20;
 ArrayList<Pix> pix;
 
 void settings() {
-  img = loadImage("buddha_480-360.jpg");
-  //img = loadImage("buddha_3.png");
+  //img = loadImage("buddha_480-360.jpg");
+ img = loadImage("silvia_2.jpg");
   size(img.width, img.height);
   DIM = min(img.width, img.height)/40;
   println(DIM);
@@ -13,10 +13,12 @@ void settings() {
 void setup() {
   colorMode(HSB);
   pix = new ArrayList<Pix>();
+  
   image(img, 0, 0);
+  //filter(ERODE);
   loadPixels();
-  for (int i= 0; i< width-DIM; i+=DIM) {
-    for (int j=0; j < height-DIM; j+=DIM) {
+  for (int i= 0; i< floor(width/DIM)*DIM; i+=DIM) {
+    for (int j=0; j < floor(height/DIM)*DIM; j+=DIM) {
       float sum = 33;
       for (int k= 0; k<DIM; k++) {
         for (int h = 0; h< DIM; h++) {
@@ -29,20 +31,48 @@ void setup() {
       }
       sum /= (DIM * DIM);
       pix.add(new Pix(i+DIM/2, j+DIM/2, sum));
-      for (int k= 0; k<DIM; k++) {
-        for (int h = 0; h< DIM; h++) {
-          int index = (i + k) + (j+h)*width;
+      //for (int k= 0; k<DIM; k++) {
+        //for (int h = 0; h< DIM; h++) {
+          //int index = (i + k) + (j+h)*width;
           //pixels[index] = color(0, 0, sum);
-        }
-      }
+        //}
+      //}
     }
   }
   updatePixels();
 }
 
+void mousePressed(){
+  DIM = floor(map(mouseX,0,width, 0,100));
+    pix = new ArrayList<Pix>();
+  
+  image(img, 0, 0);
+  loadPixels();
+  for (int i= 0; i< floor(width/DIM)*DIM; i+=DIM) {
+    for (int j=0; j < floor(height/DIM)*DIM; j+=DIM) {
+      float sum = 33;
+      for (int k= 0; k<DIM; k++) {
+        for (int h = 0; h< DIM; h++) {
+          int index = (i + k) + (j+h)*width;
+          color c = color(pixels[index]);
+          float b = brightness(c);
+          sum += b;
+        }
+      }
+      sum /= (DIM * DIM);
+      pix.add(new Pix(i+DIM/2, j+DIM/2, sum));
+
+    }
+  }
+  updatePixels();
+  println(DIM);
+  redraw();
+}
+
+
 void draw() {
   background(255);
-  noLoop();
+  //noLoop();
 
   for (Pix p : pix) {
     p.show();
