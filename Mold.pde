@@ -4,11 +4,9 @@ int DIM = 20;
 ArrayList<Pix> pix;
 
 void settings() {
-  //img = loadImage("buddha_480-360.jpg");
   img = loadImage("silvio_3.jpg");
   size(img.width, img.height);
   DIM = min(img.width, img.height)/35;
-  println(DIM);
 }
 void setup() {
   colorMode(HSB);
@@ -35,18 +33,14 @@ void init() {
     }
   }
   updatePixels();
-  
 }
 
 
 
 void mousePressed() {
   DIM = floor(map(mouseX, 0, width, 0, min(img.width, img.height)/40));
-  
   init();
-  println(DIM);
   redraw();
-  
 }
 
 
@@ -57,11 +51,10 @@ void draw() {
   for (Pix p : pix) {
     p.show();
   }
-  filter(BLUR, 1);
-  //filter(BLUR);
-  //filter(BLUR);
-  //filter(BLUR);
-  save("muffa.jpg");
+  filter(BLUR, map(mouseY, 0, height, 0, 10));
+  println("Blur: " +map(mouseY, 0, height, 0, 10) + " DIM: " + map(mouseX, 0, width, 0, min(img.width, img.height)/40));
+
+  save("muffa_" + floor(map(mouseY, 0, height, 0, 10)) + "-" + floor(map(mouseX, 0, width, 0, min(img.width, img.height)/40)));
 }
 
 
